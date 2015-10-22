@@ -572,6 +572,51 @@ adb.controller('controller', ['$scope', '$q', 'socketService', '$sce', function 
       $scope.tempPkgCmd = null;
     }
   };
+  
+  $scope.showAppInfos = function(serial, packageName){
+    $scope.appInfo = null;
+    var cmd1 = 'host:transport:' + serial;
+    var cmd2 = 'shell:dumpsys package ' + packageName;
+
+    $scope.logMessage = {
+      cmd: 'Read Infos',
+      res: 'Loading...'
+    };
+
+    $scope.getReadAllPromise(cmd1, cmd2)
+      .then(function (param) {
+        var appInfo = parsePackageInfos(param.data);
+        appInfo.packageName = packageName;
+        appInfo.serial = serial;
+        $scope.appInfo = appInfo;
+        $scope.logMessage.res = 'Done';
+    });
+    
+    $('#appInfoModal').on('hidden.bs.modal', function () {
+        $scope.appInfo = null;
+    });
+    
+  };
+
+  // remove or add permission to an app
+  $scope.setAppPermission = function(appInfo, permission, granted){
+    
+    var command = (granted ? "grant" : "revoke");
+    
+    var cmd1 = 'host:transport:' + appInfo.serial;
+    var cmd2 = 'shell:pm ' + command + ' ' + appInfo.packageName + ' ' + permission;
+    
+    $scope.logMessage = {
+      cmd: 'Change Permission for ' + appInfo.packageName,
+      res: permission + '\n' + '...'
+    };
+    
+    $scope.getReadAllPromise(cmd1, cmd2)
+      .then(function (param) {
+        var result = (granted ? "granted" : "revoked");
+        $scope.logMessage.res = permission + '\n' + result;
+    });
+  }
 
   $scope.chooseAndInstallPackage = function () {
     chrome.fileSystem.chooseEntry({'type': 'openFile'}, function (entry, fileEntries) {

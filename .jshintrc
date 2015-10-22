@@ -43,6 +43,7 @@
     "describe": true,
     "beforeEach": true,
     "afterEach": true,
-    "chrome": true
+    "chrome": true,
+    "parsePackageInfos": true
   }
 }

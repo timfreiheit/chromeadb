@@ -24,7 +24,10 @@
             <tbody>
             <tr ng-repeat="package in packages | filter:packageQuery">
                 <td>
-                    {{ package }}
+                <a href="#packages" data-toggle="modal" data-target="#appInfoModal"
+                   ng-click="showAppInfos(devInfo.serial, package);">                    
+                   {{ package }}
+                </a>
                 </td>
                 <td class="text-center">
                     <button class="btn btn-warning"
@@ -52,4 +55,45 @@
         </table>
     </div>
 </div>
+
+<!--package meminfo dialog-->
+
+<div class="modal fade" id="appInfoModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">{{ appInfo.packageName }}</h4>
+            </div>
+            <h4>Runtime Permissions:</h4>
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr class="active">
+                  <th>PERMISSION</th>
+                  <th>GRANTED</th>
+                  <th>FLAGS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="permission in appInfo.runtimePermissions">
+                    <td>
+                      {{ permission.permission }}
+                    </td> 
+                    <td class="text-center">
+                      <input type="checkbox" ng-model="permission.granted" 
+                        ng-change="setAppPermission(appInfo, permission.permission, permission.granted)"/>
+                    </td> 
+                    <td class="text-center">
+                      {{ permission.flags }}
+                    </td> 
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
