@@ -83,7 +83,8 @@
                     </td> 
                     <td class="text-center">
                       <input type="checkbox" ng-model="permission.granted" 
-                        ng-change="setAppPermission(appInfo, permission.permission, permission.granted)"/>
+                        ng-change="setAppPermission(appInfo, permission.permission, permission.granted)"
+                        ng-disabled="permission.flags !== null && permission.flags.indexOf('SYSTEM_FIXED') > -1"/>
                     </td> 
                     <td class="text-center">
                       {{ permission.flags }}
